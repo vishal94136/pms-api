@@ -1,4 +1,4 @@
-package com.api.timesheet.entity;
+package com.api.pms.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,19 +6,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Entity
-@Table(name = "activity")
 @Data
-public class Activity {
-
+@Table(name = "goal")
+public class Goal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @NotBlank(message = "Name is Mandatory")
     @Column(nullable = false)
-    private String name;
+    private String goal;
 }

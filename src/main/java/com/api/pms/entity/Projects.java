@@ -1,4 +1,4 @@
-package com.api.timesheet.entity;
+package com.api.pms.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +16,7 @@ public class Projects {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @NotBlank(message = "Name is mandatory")
     @Column(nullable = false)

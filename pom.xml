@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.api</groupId>
-	<artifactId>timesheet</artifactId>
+	<artifactId>pms</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>timesheet</name>
-	<description>Demo project for Spring Boot</description>
+	<name>pms</name>
+	<description>Performance Management System</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -37,6 +37,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
