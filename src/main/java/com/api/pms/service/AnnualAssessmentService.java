@@ -1,5 +1,6 @@
 package com.api.pms.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.api.pms.Exception.ResourceNotFoundException;
 import com.api.pms.dto.AnnualAssessmentDto;
+import com.api.pms.dto.ResourceGoalsDto;
 import com.api.pms.entity.AnnualAssessment;
+import com.api.pms.entity.Goal;
 import com.api.pms.entity.Resource;
 import com.api.pms.entity.Role;
 import com.api.pms.repository.AnnualAssessmentRepository;
@@ -80,6 +83,40 @@ public class AnnualAssessmentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<ResourceGoalsDto> getGoalsForManagerSubordinates(Long managerId) {
+
+        resourceRepository.findById(managerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Manager not found with ID: " + managerId));
+
+        List<ResourceGoalsDto> result = new ArrayList<>();
+
+        List<Resource> subordinates = resourceRepository.findByManagerId(managerId);
+
+        for (Resource sub : subordinates) {
+            ResourceGoalsDto dto = new ResourceGoalsDto();
+            dto.setResourceName(sub.getName());
+
+            dto.setGoals(sub.getGoals().stream()
+                    .map(Goal::getGoal)
+                    .collect(Collectors.toList()));
+
+
+            List<AnnualAssessment> assessments = annualAssessmentRepository.findByResourceId(sub.getId());
+            if (!assessments.isEmpty()) {
+                AnnualAssessment assessment = assessments.get(0);
+                dto.setGoalStatus(assessment.getGoalStatus());
+                dto.setYear(assessment.getYear());
+            } else {
+                dto.setGoalStatus("No Assessment");
+                dto.setYear(null);
+            }
+
+            result.add(dto);
+        }
+
+        return result;
+    }
     @Transactional
     public AnnualAssessmentDto updateAssessment(Long id, AnnualAssessmentDto dto) {
         return annualAssessmentRepository.findById(id)
@@ -117,7 +154,7 @@ public class AnnualAssessmentService {
                     if (dto.getYear() != null) {
                         assessment.setYear(dto.getYear());
                     }
-
+                    assessment.setAssessmentStatus("Completed");
                     AnnualAssessment updated = annualAssessmentRepository.save(assessment);
                     return toAnnualAssessmentDto(updated);
                 })

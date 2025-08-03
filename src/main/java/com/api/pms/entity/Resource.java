@@ -24,7 +24,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "resource")
 @Data
-@EqualsAndHashCode(exclude = {"roles","manager", "subordinates"})
+@EqualsAndHashCode(exclude = {"roles","manager", "subordinates","goals"})
 public class Resource {
 
     @Id
@@ -46,6 +46,14 @@ public class Resource {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "resource_goals",
+            joinColumns = @JoinColumn(name = "resource_id"),
+            inverseJoinColumns = @JoinColumn(name = "goal_id")
+    )
+    private Set<Goal> goals;
     
     @ManyToOne(optional = true)
     @JoinColumn(name = "manager_id")

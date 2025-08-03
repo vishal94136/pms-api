@@ -7,7 +7,10 @@ import com.api.pms.dto.AnnualAssessmentDto;
 import com.api.pms.dto.AuthRequestDto;
 import com.api.pms.dto.AuthResponseDto;
 import com.api.pms.dto.GoalDto;
+import com.api.pms.dto.GoalsWithStatusDto;
 import com.api.pms.dto.ResourceDto;
+import com.api.pms.dto.ResourceGoalsDto;
+import com.api.pms.dto.UpdateGoalStatusDto;
 import com.api.pms.entity.Goal;
 import com.api.pms.service.AnnualAssessmentService;
 import com.api.pms.service.AuthService;
@@ -112,4 +115,26 @@ public class TimeSheetController {
         return ResponseEntity.ok(resources);
     }
     
+    @PostMapping("/resource/{resourceId}/goals/{goalId}")
+    public ResponseEntity<Void> assignGoalToResource(@PathVariable Long resourceId, @PathVariable Long goalId) {
+        resourceService.assignGoalToResource(resourceId, goalId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    @GetMapping("/annualAssessment/manager/{managerId}/goals")
+    public ResponseEntity<List<ResourceGoalsDto>> getGoalsForManagerSubordinates(@PathVariable Long managerId) {
+        List<ResourceGoalsDto> goalsData = annualAssessmentService.getGoalsForManagerSubordinates(managerId);
+        return ResponseEntity.ok(goalsData);
+    }
+
+    @GetMapping("/resource/{resourceId}/goals")
+    public ResponseEntity<GoalsWithStatusDto> getGoalsForResource(@PathVariable Long resourceId) {
+        GoalsWithStatusDto goalsWithStatus = resourceService.getGoalsForResource(resourceId);
+        return ResponseEntity.ok(goalsWithStatus);
+    }
+
+    @PutMapping("/resource/{resourceId}/years/{year}/updateGoalStatus")
+    public ResponseEntity<Void> updateGoalStatus(@PathVariable Long resourceId, @PathVariable int year, @RequestBody UpdateGoalStatusDto updateDto) {
+    resourceService.updateGoalStatus(resourceId, year, updateDto.getNewStatus());
+    return ResponseEntity.ok().build();
+}
 }
